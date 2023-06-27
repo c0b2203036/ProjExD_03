@@ -153,6 +153,24 @@ class Score:
         self.img = self.font.render(f"スコア：{self.score}",0,(0,0,255))#後で見返す
         score.blit(self.img,(self.cx,self.cy))
 
+class EXplosion:
+    """
+    爆発のエフェクト
+    """
+    def __init__(self,obj:Bomb,life:int):
+        img = pg.image.load("ex03/fig/explosion.gif")
+        self.imgs = [img,pg.transform.flip(img,1,1)]
+        self.img = self.imgs[0]
+        self.rct = self.img.get_rect()
+        self.rct.center = obj.rct.center
+        self.life = life
+
+    def update(self,screen: pg.Surface):
+        self.life = -1
+        self.img = self.imgs[self.life//10%2]
+        screen.blit(self.img, self.rct)
+
+
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))    
@@ -165,7 +183,8 @@ def main():
     fonto =  pg.font.Font(None, 80)
     moji = fonto.render("GAME OVER", True, (255,0,0))
     scores = Score()
-
+    explosion = pg.image.load("ex03/fig/explosion.png")
+    explosions = []
 
     clock = pg.time.Clock()
     tmr = 0
@@ -193,9 +212,13 @@ def main():
                 if bomb.rct.colliderect(beam.rct):
                     bombs[i] = None
                     beam = None
+                    explosions.append(Explosion(bomb,100))
                     bird.change_img(6, screen)
                     scores.score += 1
-                    pg.display.update()              
+                    pg.display.update()
+
+        explosions = [explosion for explosion in explosions if explosion.life > 0]
+    
 
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
@@ -204,6 +227,8 @@ def main():
             bomb.update(screen)
         if beam is not None:
             beam.update(screen)
+        for explosion in explosions:
+            explosion.update(screen)
        
         scores.update(screen)
         pg.display.update()
