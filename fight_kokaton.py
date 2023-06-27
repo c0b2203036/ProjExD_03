@@ -141,6 +141,9 @@ def main():
     # bomb = Bomb((255, 0, 0), 10)
     bombs = [Bomb((255, 0, 0), 10) for _ in range(NUM_OF_BOMBS)]
     beam = None
+    #追加機能　文字表示
+    fonto =  pg.font.Font(None, 80)
+    moji = fonto.render("GAME OVER", True, (255,0,0))
 
     clock = pg.time.Clock()
     tmr = 0
@@ -157,8 +160,9 @@ def main():
             if bird.rct.colliderect(bomb.rct):
                 # ゲームオーバー時に，こうかとん画像を切り替え，1秒間表示させる
                 bird.change_img(8, screen)
+                screen.blit(moji, [400,400]) #GAMEOVERを表示させる
                 pg.display.update()
-                time.sleep(1)
+                time.sleep(5)
                 return
         
         for i, bomb in enumerate(bombs):
