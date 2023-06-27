@@ -158,7 +158,7 @@ class EXplosion:
     爆発のエフェクト
     """
     def __init__(self,obj:Bomb,life:int):
-        img = pg.image.load("ex03/fig/explosion.gif")
+        img = pg.image.load("ex03/fig/explosion.png")
         self.imgs = [img,pg.transform.flip(img,1,1)]
         self.img = self.imgs[0]
         self.rct = self.img.get_rect()
@@ -212,7 +212,7 @@ def main():
                 if bomb.rct.colliderect(beam.rct):
                     bombs[i] = None
                     beam = None
-                    explosions.append(Explosion(bomb,100))
+                    explosions.append(EXplosion(bomb,100))
                     bird.change_img(6, screen)
                     scores.score += 1
                     pg.display.update()
